@@ -94,24 +94,46 @@ reconstructed_img, bounds, history = run_solver(
 
 ### 物理模型
 
-系统模拟旋转扫描单光子LiDAR对空间碎片进行观测。每个光子探测事件记录为 $(\theta, r)$：
-- $\theta$: 探测时刻的扫描角度
-- $r$: 相对距离测量值
+系统模拟旋转扫描单光子LiDAR对空间碎片进行观测。探测器绕目标旋转，每个光子探测事件记录为 $(\theta_i, r_i)$：
+- $\theta_i$: 第 $i$ 个光子被探测时的扫描角度
+- $r_i$: 该光子的相对距离测量值
+
+### 正向模型
+
+对于给定的目标反射率场 $f(x,y)$，单个光子事件 $(\theta, r)$ 的期望探测计数为：
+
+$$\hat{n}(\theta, r) = \int\int H(x,y;\theta,r) f(x,y) \, dx\,dy + \eta$$
+
+其中 $H(x,y;\theta,r)$ 为系统响应函数（高斯型投影核）：
+
+$$H(x,y;\theta,r) = \exp\left(-\frac{(x\cos\theta + y\sin\theta - r)^2}{2\sigma^2}\right)$$
+
+$\eta$ 为暗计数背景噪声。
 
 ### 隐式神经表示 (INR)
 
 目标反射率场 $f(x,y)$ 由多层感知机参数化：
 
-$$f(x,y) = \text{MLP}(\gamma(x,y))$$
+$$f(x,y) = \text{Softplus}(\text{MLP}(\gamma(x,y)))$$
 
-其中 $\gamma(\cdot)$ 为退火位置编码，动态控制高频分量的激活。
+其中 $\gamma(\cdot)$ 为**退火位置编码**：
+
+$$\gamma(\mathbf{x}) = [\mathbf{x}, \sin(2^k\pi\mathbf{x}), \cos(2^k\pi\mathbf{x})]_{k=0}^{L-1} \cdot w_k(\alpha)$$
+
+权重 $w_k(\alpha)$ 随训练进度 $\alpha$ 从0平滑过渡到1，实现从低频到高频的渐进式解锁，有效抑制散粒噪声引入的高频伪影。
 
 ### 损失函数
 
-$$\mathcal{L} = -\sum_i \log \hat{n}_i + \lambda \|\mathbf{f}\|_1$$
+采用负对数似然损失配合稀疏正则化：
 
-- 第一项：负对数似然 (拟合光子数据)
-- 第二项：L1稀疏正则化 (抑制背景噪声)
+$$\mathcal{L} = -\frac{1}{N}\sum_{i=1}^{N} \log \hat{n}(\theta_i, r_i) + \lambda \cdot \text{mean}(f)$$
+
+- 第一项：负对数似然损失，驱动模型拟合观测到的光子分布
+- 第二项：L1稀疏正则化，抑制背景区域的虚假响应
+
+### FBP热启动
+
+利用传统滤波反投影 (FBP) 结果初始化INR的低频分量，提供合理的拓扑先验，显著加速收敛并避免陷入局部最优。
 
 ## 联系方式
 

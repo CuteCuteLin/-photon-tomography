@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# IDE
+.idea/
+
+# 大型数据文件 (可选择是否上传)
+# 如果需要分享数据，注释掉这几行
+*.npy
+*.npz
+
+# 生成的图片/动画 (可选择是否上传)
+*.gif
+*.png
+*.jpg
+
+# Word 文档
+*.docx
+
+# 系统文件
+.DS_Store
+Thumbs.db

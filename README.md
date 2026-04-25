@@ -28,7 +28,99 @@
 └── requirements.txt     # 依赖列表
 ```
 
-## 安装
+## 新手部署指南
+
+如果你是第一次接触 Python 项目，请按照以下步骤操作：
+
+### 第一步：安装 Python
+
+1. 访问 [Python 官网](https://www.python.org/downloads/) 下载 Python 3.8 或更高版本
+2. 安装时**务必勾选** "Add Python to PATH" 选项
+3. 安装完成后，打开命令行（Windows 按 `Win+R` 输入 `cmd`），输入以下命令验证：
+   ```bash
+   python --version
+   ```
+   如果显示版本号（如 `Python 3.10.x`），说明安装成功
+
+### 第二步：安装 Git
+
+1. 访问 [Git 官网](https://git-scm.com/downloads) 下载并安装 Git
+2. 安装完成后，在命令行输入：
+   ```bash
+   git --version
+   ```
+
+### 第三步：克隆项目
+
+在命令行中执行：
+```bash
+git clone https://github.com/CuteCuteLin/-photon-tomography.git
+cd -photon-tomography
+```
+
+### 第四步：创建虚拟环境（推荐）
+
+虚拟环境可以隔离项目依赖，避免与其他项目冲突：
+
+```bash
+# 创建虚拟环境
+python -m venv venv
+
+# 激活虚拟环境
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+```
+
+激活后，命令行前面会显示 `(venv)`。
+
+### 第五步：安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+> **注意**：如果你有 NVIDIA 显卡并希望使用 GPU 加速，请先安装 CUDA 版本的 PyTorch：
+> ```bash
+> pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+> ```
+> 然后再运行 `pip install -r requirements.txt`
+
+### 第六步：运行测试
+
+```bash
+python main.py
+```
+
+如果一切正常，程序将：
+1. 加载预设的光子数据
+2. 执行 FBP 和 MUPT 重建
+3. 显示重建结果对比图
+4. 生成收敛过程动画 GIF
+
+### 常见问题
+
+**Q: 提示 `ModuleNotFoundError: No module named 'torch'`**
+
+A: 说明 PyTorch 未安装成功，请手动安装：
+```bash
+pip install torch
+```
+
+**Q: 程序运行很慢**
+
+A: 默认使用 CPU 运行。如果有 NVIDIA 显卡，请安装 CUDA 版本的 PyTorch（见第五步）。
+
+**Q: 提示 CUDA 相关错误**
+
+A: 确保你的显卡支持 CUDA，并安装了对应版本的 CUDA Toolkit。如果不确定，可以强制使用 CPU 运行，代码会自动检测并回退。
+
+---
+
+## 安装（快速版）
+
+如果你已经熟悉 Python 开发环境：
 
 ```bash
 # 克隆仓库

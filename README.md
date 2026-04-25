@@ -113,32 +113,6 @@ $$\mathcal{L} = -\sum_i \log \hat{n}_i + \lambda \|\mathbf{f}\|_1$$
 - 第一项：负对数似然 (拟合光子数据)
 - 第二项：L1稀疏正则化 (抑制背景噪声)
 
-## 实验结果
-
-| 方法 | 光子数 | PSNR (dB) | SSIM |
-|------|--------|-----------|------|
-| FBP | 10^5 | 18.2 | 0.65 |
-| MUPT | 10^5 | **24.7** | **0.89** |
-| FBP | 10^6 | 21.3 | 0.78 |
-| MUPT | 10^6 | **28.5** | **0.94** |
-
-## 引用
-
-如果您在研究中使用了本代码，请引用：
-
-```bibtex
-@article{mupt2024,
-  title={Motion-targeted Unconventional Photon Tomography: A New Paradigm for Single-Photon Direct Probability Imaging},
-  author={Guo, Yulin and others},
-  journal={Optica},
-  year={2024}
-}
-```
-
-## 许可证
-
-本项目采用 MIT 许可证。
-
 ## 联系方式
 
-如有问题或建议，请提交 Issue 或联系作者：1440653682@qq.com
+如有问题或建议，请提交 Issue 或联系作者：guoyulin@nudt.edu.cn
